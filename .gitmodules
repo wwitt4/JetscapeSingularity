@@ -1,0 +1,3 @@
+[submodule "docker/JETSCAPE"]
+	path = docker/JETSCAPE
+	url = https://github.com/JETSCAPE/JETSCAPE.git
