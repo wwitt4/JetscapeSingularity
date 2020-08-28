@@ -1,13 +1,15 @@
+# Build from the official OpenScienceGrid
+#FROM opensciencegrid/osgvo-ubuntu-18.04:latest
 # Build from the official docker python base image, based on Debian
 FROM python:3.6-stretch
 
 # Install pre-reqs (commented ones are already in base image)
 RUN apt-get update && apt-get install -y \
-#curl \
+curl \
+git \
 doxygen \
 emacs \
 ffmpeg \
-#g++ \
 gsl-bin \
 hdf5-tools \
 less \
@@ -16,14 +18,16 @@ libeigen3-dev \
 libgsl-dev \
 libhdf5-serial-dev \
 libxpm-dev \
+libxft-dev \
+libxext-dev \
 openmpi-bin \
 rsync \
 swig \
 valgrind \
 vim \
-#zlib1g-dev \
-&& rm -rf /var/lib/apt/lists/*
+gdb \
 
+&& rm -rf /var/lib/apt/lists/*
 # Install additional useful python packages
 RUN pip install --upgrade pip \
 && pip install \
@@ -57,11 +61,12 @@ ENV PATH="${ROOTSYS}/bin:${PATH}"
 ENV LD_LIBRARY_PATH="${ROOTSYS}/lib:${LD_LIBRARY_PATH}"
 ENV PYTHONPATH="${ROOTSYS}/lib"
 RUN mkdir -p ${ROOTSYS} && mkdir -p ${HOME}/root && cd ${HOME}/root \
-&& git clone --depth 1 --branch v6-18-04 https://github.com/root-project/root.git src \
+&& git clone --depth 1 --branch v6-14-06 https://github.com/root-project/root.git src \
 && mkdir build && cd build \
 && cmake ../src -DCMAKE_INSTALL_PREFIX=${ROOTSYS} \
-&& make -j8 install \
+&& make -j1 install \
 && rm -r ${HOME}/root
+# Note: The build is not cached.
 
 # Install HepMC 3.1.1
 RUN curl -SL http://hepmc.web.cern.ch/hepmc/releases/HepMC3-3.1.1.tar.gz | tar -xvzC /usr/local \
@@ -110,12 +115,13 @@ RUN curl -SL https://sourceforge.net/projects/modules/files/Modules/modules-4.5.
 # source /usr/local/init/profile.sh
 # module load heppy/1.0
 
-# Set up a user group
-ARG id=1234
-RUN groupadd -g ${id} ${username} \
-&& useradd --create-home --home-dir /home/${username} -u ${id} -g ${username} ${username}
-USER ${username}
-ENV HOME /home/${username}
-WORKDIR ${HOME}
+
+## Set up a user group
+#ARG id=1234
+#RUN groupadd -g ${id} ${username} \
+#&& useradd --create-home --home-dir /home/${username} -u ${id} -g ${username} ${username}
+#USER ${username}
+#ENV HOME /home/${username}
+#WORKDIR ${HOME}
 
 ENTRYPOINT /bin/bash
