@@ -1,0 +1,12 @@
+
+
+#PBS -S /bin/bash
+#PBS -A ACF-UTK0019
+#PBS -o /lustre/haven/user/wwitt4
+#PBS -e /lustre/haven/user/wwitt4
+
+#PBS -l nodes=1:ppn=16,walltime=01:00:00
+
+#PBS -l partition=general:beacon
+
+pbsdsh bash -l -c -v '$PBS_O_WORKDIR/job.5020.0-5.sh'
