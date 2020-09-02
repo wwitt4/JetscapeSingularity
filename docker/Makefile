@@ -1,13 +1,24 @@
 TAG_BASE=bardelch/jetscape-prereq:singularity
 TAG_JETSCAPE=bardelch/jetscape-compiled:singularity
 
-all: build push
+all: submodule build push
 
 clean:
 
-build:
+debug:
+	docker build -f Dockerfile-prereq-heppy-debug -t bardelch/jetscape-prereq:heppy .
+
+build: base jetscape
+
+submodule:
+	git submodule init
+	git submodule update
+
+base:
 	docker build -f Dockerfile-prereq -t $(TAG_BASE) .
-	docker build -f Dockerfile.deploy -t $(TAG_JETSCAPE)
+
+jetscape:
+	docker build -f Dockerfile.deploy -t $(TAG_JETSCAPE) .
 
 push:
 	docker push $(TAG_BASE)
