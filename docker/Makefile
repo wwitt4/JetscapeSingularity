@@ -11,6 +11,7 @@ debug:
 build: base jetscape
 
 submodule:
+	cd ..
 	git submodule init
 	git submodule update
 
