@@ -61,7 +61,7 @@ ENV PATH="${ROOTSYS}/bin:${PATH}"
 ENV LD_LIBRARY_PATH="${ROOTSYS}/lib:${LD_LIBRARY_PATH}"
 ENV PYTHONPATH="${ROOTSYS}/lib"
 RUN mkdir -p ${ROOTSYS} && mkdir -p ${HOME}/root && cd ${HOME}/root \
-&& git clone --depth 1 --branch v6-14-06 https://github.com/root-project/root.git src \
+&& git clone --depth 1 --branch v6-18-04 https://github.com/root-project/root.git src \
 && mkdir build && cd build \
 && cmake ../src -DCMAKE_INSTALL_PREFIX=${ROOTSYS} \
 && make -j1 install \
@@ -116,12 +116,12 @@ RUN curl -SL https://sourceforge.net/projects/modules/files/Modules/modules-4.5.
 # module load heppy/1.0
 
 
-## Set up a user group
-#ARG id=1234
-#RUN groupadd -g ${id} ${username} \
-#&& useradd --create-home --home-dir /home/${username} -u ${id} -g ${username} ${username}
+# Set up a user group
+ARG id=1234
+RUN groupadd -g ${id} ${username} \
+&& useradd --create-home --home-dir /home/${username} -u ${id} -g ${username} ${username}
 #USER ${username}
-#ENV HOME /home/${username}
-#WORKDIR ${HOME}
+ENV HOME /home/${username}
+WORKDIR ${HOME}
 
 ENTRYPOINT /bin/bash

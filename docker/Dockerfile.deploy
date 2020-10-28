@@ -1,4 +1,5 @@
-FROM jetscape/base:v1.4
+#FROM jetscape/base:v1.4
+FROM bardelch/jetscape-prereq
 #FROM bardelch/jetscape-prereq:singularity
 
 ## Set up a user group
